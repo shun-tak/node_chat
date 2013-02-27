@@ -11,9 +11,12 @@ var express = require('express')
   , http = require('http')
   , path = require('path');
 
+var app = express();
+
 require('date-utils');
 
-var app = express();
+var model = require('./model');
+var Post = model.Post;
 
 app.configure(function(){
   app.set('port', process.env.PORT || 3000);
@@ -51,6 +54,13 @@ io.sockets.on('connection', function (socket) {
       }
       var date = new Date();
       data.date = '' + date.toFormat("YYYY-MM-D HH24:MI:SS");
+
+      var newPost = new Post(data);
+      newPost.save(function(err) {
+        if (err) {
+          log(err);
+        }
+      });
       socket.emit('msg push', data);
       socket.broadcast.emit('msg push', data);
     }
