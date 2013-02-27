@@ -6,3 +6,11 @@ body {
 a {
   color: #00B7FF;
 }
+
+.name {
+  font-style: italic;
+}
+
+.date {
+  font-size: small;
+}

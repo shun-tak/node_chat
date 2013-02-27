@@ -3,19 +3,20 @@ window.onload = function() {
 }
 
 var logDiv;
-var log = function() { console.log(arguments); }
 var socket = new io.connect('/');
 
 socket.on('connect', function() {
-  log('connected');
-//  socket.emit('msg send', 'data');
-  socket.on('msg push', function(msg) {
-    log(msg);
-    logDiv.prepend('<li>' + msg + '</li>');
+  socket.on('msg push', function(data) {
+    logDiv.prepend('<li>' + data.text
+                   + ' -- <span class="name">' + data.name + '</span>'
+                   + ' <span class="date">' + data.date + '</span></li>');
   });
 });
 
 function ping() {
-  var text = document.getElementById("text").value;
-  socket.emit('msg send', text);
+  var data = {
+    'text': $('#text').val(),
+    'name': $('#name').val(),
+  }
+  socket.emit('msg send', data);
 }

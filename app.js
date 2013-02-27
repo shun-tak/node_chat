@@ -11,6 +11,8 @@ var express = require('express')
   , http = require('http')
   , path = require('path');
 
+require('date-utils');
+
 var app = express();
 
 app.configure(function(){
@@ -42,9 +44,16 @@ var io = require('socket.io').listen(server);
 
 io.sockets.on('connection', function (socket) {
   log('connected');
-  socket.on('msg send', function (msg) {
-    socket.emit('msg push', msg);
-    socket.broadcast.emit('msg push', msg);
+  socket.on('msg send', function (data) {
+    if (data && data.text != ''  && typeof data.text === 'string') {
+      if (data.name == '') {
+        data.name = 'anonymous';
+      }
+      var date = new Date();
+      data.date = '' + date.toFormat("YYYY-MM-D HH24:MI:SS");
+      socket.emit('msg push', data);
+      socket.broadcast.emit('msg push', data);
+    }
   });
   socket.on('disconnect', function() {
     log('disconnected');
