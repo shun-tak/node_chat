@@ -3,9 +3,22 @@
   <head>
     <title><%= title %></title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script src="http://code.jquery.com/jquery-migrate-1.1.1.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/javascripts/sample.js"></script>
   </head>
   <body>
     <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
+    お名前：<input type="text" id="name" size=15 />
+    <input type="text" id="text" size=50 />
+    <button onclick=javascript:ping() >コメントの送信</button>
+    <div>
+      <ul id="log">
+      <% posts.forEach(function(post) { %>
+        <li><%= post.text %> -- <span class="name"><%= post.name %></span> <span class="date"><%= post.date %></span></li>
+      <% }) %>
+      </ul>
+    </div>
   </body>
 </html>

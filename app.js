@@ -47,6 +47,20 @@ var io = require('socket.io').listen(server);
 
 io.sockets.on('connection', function (socket) {
   log('connected');
+ 
+  socket.on('first', function () {
+    var query = Post.find().limit(50);
+    query.exec(function(err, posts) {
+      if (err) {
+        log(err);
+      } else {
+        for (var i = 0; i < posts.length; i++) {
+          socket.emit('msg push', posts[i]);
+        }
+      }
+    });
+  });
+
   socket.on('msg send', function (data) {
     if (data && data.text != ''  && typeof data.text === 'string') {
       if (data.name == '') {
@@ -65,6 +79,7 @@ io.sockets.on('connection', function (socket) {
       socket.broadcast.emit('msg push', data);
     }
   });
+
   socket.on('disconnect', function() {
     log('disconnected');
   });
